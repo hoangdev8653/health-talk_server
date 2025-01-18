@@ -1,0 +1,1 @@
+npx sequelize-cli model:generate --name Postcards --attributes title:string,decription:string,video_url:string
