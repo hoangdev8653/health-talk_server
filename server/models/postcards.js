@@ -14,9 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Postcards.init({
-    title: DataTypes.STRING,
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      allowNull: false,
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     decription: DataTypes.STRING,
-    video_url: DataTypes.STRING
+    video_url: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Postcards',

@@ -1,6 +1,5 @@
-// Sử dụng require thay vì import
 require("dotenv/config");
-const { Sequelize } = require("sequelize"); // Sử dụng require để nhập Sequelize
+const { Sequelize } = require("sequelize"); 
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -17,11 +16,10 @@ const sequelize = new Sequelize(
 const dbconn = async () => {
   try {
     await sequelize.authenticate();
-    console.log('Connection successfully ✅.');
+    console.log('Kết nối DB thành công ✅.');
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error('Kết nối DB thất bại:', error);
   }
 };
 
-// Thay đổi export từ `export default` thành `module.exports`
 module.exports = dbconn;
