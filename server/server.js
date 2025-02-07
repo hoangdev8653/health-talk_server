@@ -22,6 +22,7 @@ dbconn();
 app.use("/user", routers.user)
 app.use("/postcard", routers.postcard)
 app.use("/categories", routers.categories)
+app.use("/article", routers.article)
 
 app.use((req, res, next) => {
   next(createHttpError(404, "Not Found"));
