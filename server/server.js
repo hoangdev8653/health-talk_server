@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const morgan = require("morgan");
 const dbconn = require("./config/dbconnect");
-const routers = require("./routers/index")
+const routers = require("./routers/index");
 
 const port = process.env.PORT;
 
@@ -19,10 +19,11 @@ app.use(morgan("dev"));
 
 dbconn();
 
-app.use("/user", routers.user)
-app.use("/postcard", routers.postcard)
-app.use("/categories", routers.categories)
-app.use("/article", routers.article)
+app.use("/user", routers.user);
+app.use("/postcard", routers.postcard);
+app.use("/categories", routers.categories);
+app.use("/article", routers.article);
+app.use("/banner", routers.banner);
 
 app.use((req, res, next) => {
   next(createHttpError(404, "Not Found"));

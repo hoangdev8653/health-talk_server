@@ -8,9 +8,9 @@ const getAllCategories = async () => {
   }
 };
 
-const createCategories = async ({ name, image, description }) => {
+const createCategories = async ({ name, image, description, slug }) => {
   try {
-    return await db.Categories.create({ name, image, description });
+    return await db.Categories.create({ name, image, description, slug });
   } catch (error) {
     console.log(error);
   }

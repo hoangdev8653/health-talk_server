@@ -1,6 +1,6 @@
 const cloudinary = require("cloudinary").v2;
-const {CloudinaryStorage} = require("multer-storage-cloudinary");
-const multer  = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const multer = require("multer");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -14,7 +14,7 @@ const storage = new CloudinaryStorage({
     return {
       folder: "health-talk",
       resource_type: "auto",
-      allowedFormats: ["jpeg", "png", "jpg", "mp3"],
+      allowedFormats: ["jpeg", "png", "jpg", "mp3", "webp"],
     };
   },
 });

@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const userControllers = require("../controllers/user")
+const userControllers = require("../controllers/user");
+const validateToken = require("../middlewares/auth");
 
-
-router.get("/", userControllers.getAllUser)
-router.post("/dang-ki", userControllers.register)
-router.post("/dang-nhap", userControllers.login)
+router.route("/").get(userControllers.getAllUser);
+router.route("/dang-ki").post(userControllers.register);
+router.route("/dang-nhap").post(userControllers.login);
+router.route("/refreshToken").post(userControllers.refreshToken);
 
 module.exports = router;

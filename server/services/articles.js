@@ -20,12 +20,20 @@ const getAllArticle = async () => {
   }
 };
 
-const createArticle = async ({ title, content, image, userId, categoryId }) => {
+const createArticle = async ({
+  title,
+  content,
+  image,
+  slug,
+  userId,
+  categoryId,
+}) => {
   try {
     return await db.Articles.create({
       title,
       content,
       image,
+      slug,
       userId,
       categoryId,
     });

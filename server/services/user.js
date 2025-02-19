@@ -1,6 +1,8 @@
 const db = require("../models");
 const { hashPassword, passwordMatch } = require("../utils/hashPassword");
 const generateToken = require("../utils/generateToken");
+const validateToken = require("../middlewares/auth");
+const verifyRefreshToken = require("../middlewares/verifyRefreshToken");
 
 const getAllUser = async () => {
   try {
@@ -36,13 +38,25 @@ const login = async ({ email, password }) => {
     const user = await db.Users.findOne({ where: { email } });
     if (!user) {
       throw new Error("Email Không tồn tại");
-    }    
+    }
     const isMatch = await passwordMatch(password, user.password);
     if (!isMatch) {
       throw new Error("Mật khẩu không đúng");
     }
-    const {accessToken, refreshToken } = generateToken(user.id);
+    const { accessToken, refreshToken } = generateToken(user.id);
     return { user, accessToken, refreshToken };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const refreshToken = async (refreshToken) => {
+  try {
+    const tokenValidate = await verifyRefreshToken(refreshToken);
+    console.log("tokenValidate: ", tokenValidate);
+
+    const newToken = generateToken(tokenValidate);
+    return newToken;
   } catch (error) {
     console.log(error);
   }
@@ -51,5 +65,6 @@ const login = async ({ email, password }) => {
 module.exports = {
   getAllUser,
   register,
-  login
+  login,
+  refreshToken,
 };

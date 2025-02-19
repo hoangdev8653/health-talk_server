@@ -33,15 +33,30 @@ const login = async (req, res, next) => {
       email,
       password,
     });
-    return res
-      .status(StatusCodes.OK)
-      .json({
-        status: 200,
-        messeage: "Xử lý thành công",
-        content: user,
-        accessToken,
-        refreshToken,
-      });
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      messeage: "Xử lý thành công",
+      content: user,
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const refreshToken = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+    const newToken = await userServices.refreshToken(refreshToken);
+    console.log(newToken);
+
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      messeage: "xử lý thành công",
+      newToken,
+    });
   } catch (error) {
     console.log(error);
     next(error);
@@ -51,5 +66,6 @@ const login = async (req, res, next) => {
 module.exports = {
   getAllUser,
   register,
-  login
+  login,
+  refreshToken,
 };
