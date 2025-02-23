@@ -3,6 +3,7 @@ const postcardRouter = require("./postcard");
 const categoriesRouter = require("./categories");
 const articlesRouter = require("./articles");
 const bannerRouter = require("./banner");
+const reviewArticlesRouter = require("./reviewArticles");
 
 const routers = {
   user: userRouter,
@@ -10,6 +11,7 @@ const routers = {
   categories: categoriesRouter,
   article: articlesRouter,
   banner: bannerRouter,
+  reviewArticle: reviewArticlesRouter,
 };
 
 module.exports = routers;

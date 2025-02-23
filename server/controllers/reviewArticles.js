@@ -1,0 +1,73 @@
+const { StatusCodes } = require("http-status-codes");
+const reviewArticleServices = require("../services/reviewArticles");
+
+const getAllReview = async (req, res, next) => {
+  try {
+    const review = await reviewArticleServices.getAllReview();
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: review });
+  } catch (error) {
+    next(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
+  }
+};
+
+const getReviewById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const review = await reviewArticleServices.getReviewById(id);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: review });
+  } catch (error) {
+    next(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
+  }
+};
+
+const createReview = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const { content, likes, articleId, parentId } = req.body;
+    const review = await reviewArticleServices.createReview({
+      content,
+      likes,
+      userId,
+      articleId,
+      parentId,
+    });
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ status: 201, message: "Xử lý thành công", content: review });
+  } catch (error) {
+    next(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
+  }
+};
+
+const updateReview = async (req, res, next) => {
+  try {
+  } catch (error) {}
+};
+
+const deleteReview = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const review = await reviewArticleServices.deleteReview(id);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: review });
+  } catch (error) {
+    next(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
+  }
+};
+
+module.exports = {
+  getAllReview,
+  getReviewById,
+  createReview,
+  updateReview,
+  deleteReview,
+};
