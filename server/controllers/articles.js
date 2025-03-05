@@ -14,11 +14,67 @@ const getAllArticle = async (req, res, next) => {
   }
 };
 
+const getArticleById = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const article = await articlesServices.getArticleById(id);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: article });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const getArticleBySlug = async (req, res, next) => {
+  try {
+    const slug = req.params.slug;
+    const article = await articlesServices.getArticleBySlug(slug);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: article });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const getArticlesByCategory = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const article = await articlesServices.getArticlesByCategory(id);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: article });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const getArticleByCategorySlug = async (req, res, next) => {
+  try {
+    const slug = req.params.slug;
+    const article = await articlesServices.getArticleByCategorySlug(slug);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: article });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const createArticle = async (req, res, next) => {
   try {
     const userId = req.userId;
     const { title, content, categoryId } = req.body;
+    console.log(req.body);
+
     const fileImage = req.file;
+    console.log(fileImage);
+
     const slug = customSlug(title);
     const article = await articlesServices.createArticle({
       title,
@@ -51,6 +107,10 @@ const deleteArticle = async (req, res, next) => {
 };
 module.exports = {
   getAllArticle,
+  getArticleById,
+  getArticleBySlug,
+  getArticlesByCategory,
+  getArticleByCategorySlug,
   createArticle,
   deleteArticle,
 };

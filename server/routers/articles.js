@@ -6,6 +6,12 @@ import validateToken from "../middlewares/auth";
 const articlesControllers = require("../controllers/articles");
 
 router.route("/").get(articlesControllers.getAllArticle);
+router.route("/byId").get(articlesControllers.getArticleById);
+router.route("/:slug").get(articlesControllers.getArticleBySlug);
+router.route("/byCategory").get(articlesControllers.getArticlesByCategory);
+router
+  .route("/byCategory/:slug")
+  .get(articlesControllers.getArticleByCategorySlug);
 router
   .route("/create")
   .post(

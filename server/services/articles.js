@@ -7,6 +7,52 @@ const getAllArticle = async () => {
       include: [
         {
           model: db.Categories,
+          attributes: ["id", "name", "slug"],
+        },
+        {
+          model: db.Users,
+          attributes: ["id", "username", "email", "image"],
+        },
+      ],
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getArticleById = async (id) => {
+  try {
+    const article = await db.Articles.findOne({
+      where: { id },
+      attributes: { exclude: ["userId", "categoryId"] },
+      include: [
+        {
+          model: db.Categories,
+          attributes: ["id", "name", "slug"],
+        },
+        {
+          model: db.Users,
+          attributes: ["id", "username", "email", "image"],
+        },
+      ],
+    });
+    if (!article) {
+      throw new Error("Article không tồn tại");
+    }
+    return article;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getArticleBySlug = async (slug) => {
+  try {
+    const article = await db.Articles.findOne({
+      where: { slug },
+      attributes: { exclude: ["userId", "categoryId"] },
+      include: [
+        {
+          model: db.Categories,
           attributes: ["id", "name"],
         },
         {
@@ -15,6 +61,55 @@ const getAllArticle = async () => {
         },
       ],
     });
+    if (!article) {
+      throw new Error("Article không tồn tại");
+    }
+    return article;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getArticlesByCategory = async (categoryId) => {
+  try {
+    return await db.Articles.findAll({
+      where: { categoryId },
+      attributes: { exclude: ["userId", "categoryId"] },
+      include: [
+        {
+          model: db.Categories,
+          attributes: ["id", "name", "slug"],
+        },
+        {
+          model: db.Users,
+          attributes: ["id", "username", "email", "image"],
+        },
+      ],
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getArticleByCategorySlug = async (slug) => {
+  try {
+    const articles = await db.Articles.findAll({
+      attributes: { exclude: ["userId", "categoryId"] },
+      include: [
+        {
+          model: db.Categories,
+          attributes: ["id", "name", "slug"],
+        },
+        {
+          model: db.Users,
+          attributes: ["id", "username", "email", "image"],
+        },
+      ],
+    });
+    const article = articles.filter((item) => {
+      return item.Category.slug == slug;
+    });
+    return article;
   } catch (error) {
     console.log(error);
   }
@@ -55,6 +150,10 @@ const deleteArticle = async (id) => {
 };
 module.exports = {
   getAllArticle,
+  getArticleById,
+  getArticleBySlug,
+  getArticlesByCategory,
+  getArticleByCategorySlug,
   createArticle,
   deleteArticle,
 };

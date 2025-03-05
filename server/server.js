@@ -25,6 +25,8 @@ app.use("/categories", routers.categories);
 app.use("/article", routers.article);
 app.use("/banner", routers.banner);
 app.use("/reviewArticle", routers.reviewArticle);
+app.use("/notification", routers.notification);
+app.use("/like", routers.like);
 
 app.use((req, res, next) => {
   next(createHttpError(404, "Not Found"));

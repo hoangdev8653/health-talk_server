@@ -4,6 +4,8 @@ const categoriesRouter = require("./categories");
 const articlesRouter = require("./articles");
 const bannerRouter = require("./banner");
 const reviewArticlesRouter = require("./reviewArticles");
+const notificationRouter = require("./notification");
+const likeRouter = require("./likes");
 
 const routers = {
   user: userRouter,
@@ -12,6 +14,8 @@ const routers = {
   article: articlesRouter,
   banner: bannerRouter,
   reviewArticle: reviewArticlesRouter,
+  notification: notificationRouter,
+  like: likeRouter,
 };
 
 module.exports = routers;

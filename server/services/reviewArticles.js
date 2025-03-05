@@ -1,4 +1,5 @@
 const db = require("../models");
+const articleServices = require("../services/articles");
 
 const getAllReview = async () => {
   try {
@@ -28,13 +29,24 @@ const createReview = async ({
   parentId,
 }) => {
   try {
-    return await db.ReviewArticles.create({
+    const review = db.ReviewArticles.create({
       content,
       likes,
       userId,
       articleId,
       parentId,
     });
+
+    const article = await articleServices.getArticleById(articleId);
+    await db.Notifications.create({
+      receiverId: article.User.id,
+      senderId: userId,
+      postId: article.id,
+      type: "comment",
+      message: `${article.User.username} Đã bình luận vào bài viết của bạn`,
+      is_read: false,
+    });
+    return review;
   } catch (error) {
     console.log(error);
   }
