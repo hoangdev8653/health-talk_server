@@ -5,9 +5,8 @@ const reviewArticlesControllers = require("../controllers/reviewArticles");
 const validateToken = require("../middlewares/auth");
 
 router.route("/").get(reviewArticlesControllers.getAllReview);
-router
-  .route("/getByUser")
-  .get(validateToken, reviewArticlesControllers.getReviewById);
+router.route("/getById").get(reviewArticlesControllers.getReviewById);
+router.route("/getByArticle").get(reviewArticlesControllers.getReviewByArticle);
 router
   .route("/create")
   .post(validateToken, reviewArticlesControllers.createReview);

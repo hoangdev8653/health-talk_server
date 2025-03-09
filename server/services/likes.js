@@ -34,15 +34,18 @@ const getLikeByPostId = async (postId) => {
 
 const createLike = async ({ userId, postId }) => {
   try {
-    const likes = await db.Likes.findAll();
-    const isUserId = likes.some((like) => like.userId === userId);
-    const isPostId = likes.some((post) => post.postId === postId);
-    if (isUserId && isPostId) {
-      return "Bạn đã like bài viết này";
+    const existingLike = await db.Likes.findOne({
+      where: { userId, postId },
+    });
+    if (existingLike) {
+      await existingLike.destroy();
+      return "Bạn đã bỏ like bài viết này";
     }
-    return await db.Likes.create({ userId, postId });
+    await db.Likes.create({ userId, postId });
+    return "Bạn đã like bài viết này";
   } catch (error) {
     console.log(error);
+    return "Có lỗi xảy ra";
   }
 };
 

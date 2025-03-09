@@ -1,4 +1,6 @@
 const db = require("../models");
+const reviewArticleServices = require("../services/reviewArticles");
+const likeServices = require("../services/likes");
 
 const getAllArticle = async () => {
   try {
@@ -64,7 +66,10 @@ const getArticleBySlug = async (slug) => {
     if (!article) {
       throw new Error("Article không tồn tại");
     }
-    return article;
+    const review = await reviewArticleServices.getReviewByArticle(article.id);
+    const like = await likeServices.getLikeByPostId(article.id);
+
+    return { article, like, review };
   } catch (error) {
     console.log(error);
   }
@@ -98,7 +103,7 @@ const getArticleByCategorySlug = async (slug) => {
       include: [
         {
           model: db.Categories,
-          attributes: ["id", "name", "slug"],
+          attributes: ["id", "name", "slug", "image"],
         },
         {
           model: db.Users,

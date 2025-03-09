@@ -21,6 +21,27 @@ const getReviewById = async (id) => {
   }
 };
 
+const getReviewByArticle = async (articleId) => {
+  try {
+    const review = await db.ReviewArticles.findAll({
+      where: { articleId },
+      attributes: { exclude: ["userId"] },
+      include: [
+        {
+          model: db.Users,
+          attributes: ["id", "username", "email", "image"],
+        },
+      ],
+    });
+    if (!review) {
+      throw new Error("Review không tồn tại");
+    }
+    return review;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const createReview = async ({
   content,
   likes,
@@ -67,6 +88,7 @@ const deleteReview = async (id) => {
 module.exports = {
   getAllReview,
   getReviewById,
+  getReviewByArticle,
   createReview,
   deleteReview,
 };

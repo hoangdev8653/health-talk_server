@@ -30,10 +30,16 @@ const getArticleById = async (req, res, next) => {
 const getArticleBySlug = async (req, res, next) => {
   try {
     const slug = req.params.slug;
-    const article = await articlesServices.getArticleBySlug(slug);
-    return res
-      .status(StatusCodes.OK)
-      .json({ status: 200, message: "Xử lý thành công", content: article });
+    const { article, like, review } = await articlesServices.getArticleBySlug(
+      slug
+    );
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      message: "Xử lý thành công",
+      content: article,
+      like,
+      comment: review,
+    });
   } catch (error) {
     console.log(error);
     next(error);
