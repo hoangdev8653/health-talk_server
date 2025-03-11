@@ -99,6 +99,24 @@ const createArticle = async (req, res, next) => {
   }
 };
 
+const updateCategoryIdArticle = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const { categoryId } = req.body;
+    console.log(req.body);
+
+    const article = await articlesServices.updateCategoryIdArticle(id, {
+      categoryId,
+    });
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: article });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const deleteArticle = async (req, res, next) => {
   try {
     const id = req.query.id;
@@ -118,5 +136,6 @@ module.exports = {
   getArticlesByCategory,
   getArticleByCategorySlug,
   createArticle,
+  updateCategoryIdArticle,
   deleteArticle,
 };

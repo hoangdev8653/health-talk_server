@@ -19,6 +19,8 @@ router
     validateToken,
     articlesControllers.createArticle
   );
+router.route("/update").put(articlesControllers.updateCategoryIdArticle);
+
 router.route("/delete").delete(articlesControllers.deleteArticle);
 
 module.exports = router;

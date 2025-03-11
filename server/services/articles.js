@@ -142,6 +142,20 @@ const createArticle = async ({
   }
 };
 
+const updateCategoryIdArticle = async (id, { categoryId }) => {
+  try {
+    const article = await db.Articles.findOne({ where: { id } });
+    if (!article) {
+      throw new Error("Article không tồn tại");
+    }
+    await db.Articles.update({ categoryId }, { where: { id } });
+
+    return await db.Articles.findOne({ where: { id } });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const deleteArticle = async (id) => {
   try {
     const article = await db.Articles.findOne({ where: { id } });
@@ -160,5 +174,6 @@ module.exports = {
   getArticlesByCategory,
   getArticleByCategorySlug,
   createArticle,
+  updateCategoryIdArticle,
   deleteArticle,
 };
