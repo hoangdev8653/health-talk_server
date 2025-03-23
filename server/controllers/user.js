@@ -13,6 +13,37 @@ const getAllUser = async (req, res, next) => {
   }
 };
 
+const getUserById = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const user = await userServices.getUserById(id);
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      messeage: "Xử lý thành công",
+      content: user,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const updateAvatar = async (req, res, next) => {
+  try {
+    const userId = req.UserId;
+    const fileData = req.file;
+    const user = await userServices.updateAvatar(userId, {
+      image: fileData?.path,
+    });
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, messeage: "Xử lý thành công", content: user });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
@@ -65,6 +96,8 @@ const refreshToken = async (req, res, next) => {
 
 module.exports = {
   getAllUser,
+  getUserById,
+  updateAvatar,
   register,
   login,
   refreshToken,

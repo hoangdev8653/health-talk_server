@@ -1,13 +1,42 @@
 const db = require("../models");
 const { hashPassword, passwordMatch } = require("../utils/hashPassword");
 const generateToken = require("../utils/generateToken");
-const validateToken = require("../middlewares/auth");
 const verifyRefreshToken = require("../middlewares/verifyRefreshToken");
 
 const getAllUser = async () => {
   try {
     const users = await db.Users.findAll();
     return users;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+const getUserById = async (id) => {
+  try {
+    const user = await db.Users.findOne({ where: { id } });
+    if (!user) {
+      throw new Error("User không tồn tại");
+    }
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+const updateAvatar = async (userId, { image }) => {
+  try {
+    const user = await db.Users.fillAll({ where: { id: userId } });
+    if (!user) {
+      throw new Error("User không tồn tại");
+    }
+    const updateUser = await db.Users.update(
+      { image },
+      { where: { id: userId } }
+    );
+    return updateUser;
   } catch (error) {
     console.log(error);
     throw error;
@@ -52,10 +81,8 @@ const login = async ({ email, password }) => {
 
 const refreshToken = async (refreshToken) => {
   try {
-    const tokenValidate = await verifyRefreshToken(refreshToken);
-    console.log("tokenValidate: ", tokenValidate);
-
-    const newToken = generateToken(tokenValidate);
+    const { userId } = await verifyRefreshToken(refreshToken);
+    const newToken = generateToken(userId);
     return newToken;
   } catch (error) {
     console.log(error);
@@ -64,7 +91,9 @@ const refreshToken = async (refreshToken) => {
 
 module.exports = {
   getAllUser,
+  getUserById,
   register,
   login,
+  updateAvatar,
   refreshToken,
 };

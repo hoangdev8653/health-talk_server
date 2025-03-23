@@ -24,6 +24,8 @@ const getAllArticle = async () => {
 
 const getArticleById = async (id) => {
   try {
+    console.log(id);
+
     const article = await db.Articles.findOne({
       where: { id },
       attributes: { exclude: ["userId", "categoryId"] },

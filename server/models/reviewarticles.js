@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       likes: {
         type: DataTypes.INTEGER,
-        defaultValue: 0, // Nếu không có giá trị, mặc định là 0
+        defaultValue: 0,
       },
       userId: {
         type: DataTypes.UUID,
@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       parentId: {
         type: DataTypes.UUID,
-        allowNull: true,
+        defaultValue: null,
         references: {
           model: "ReviewArticles",
           key: "id",

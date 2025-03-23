@@ -47,6 +47,21 @@ const createNotification = async (req, res, next) => {
   }
 };
 
+const updateStatusNotification = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const notification = await notificationService.updateStatusNotification(id);
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      message: "Xử lý thành công",
+      content: notification,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const deleteNotification = async (req, res, next) => {
   try {
     const id = req.query.id;
@@ -65,6 +80,7 @@ const deleteNotification = async (req, res, next) => {
 module.exports = {
   getAllNotification,
   getNotificationByUser,
+  updateStatusNotification,
   createNotification,
   deleteNotification,
 };

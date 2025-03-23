@@ -9,21 +9,39 @@ const getAllNotification = async () => {
 };
 
 const getNotificationByUser = async (userId) => {
-  const notification = await db.Notifications.findOne({
+  const notifications = await db.Notifications.findAll({
     where: { receiverId: userId },
+    order: [["createdAt", "DESC"]],
+    attributes: { exclude: ["receiverId", "senderId", "postId"] },
+    include: [
+      {
+        model: db.Users,
+        as: "sender",
+        attributes: ["id", "username", "image"],
+      },
+      {
+        model: db.Users,
+        as: "receiver",
+        attributes: ["id", "username", "image"],
+      },
+      {
+        model: db.Articles,
+        as: "post",
+        attributes: ["id", "image", "slug"],
+      },
+    ],
   });
-  if (!notification) {
-    return "Người dùng chưa có thông báo";
-  }
-  return notification;
+
+  return notifications.length > 0 ? notifications : [];
 };
 
-const createNotification = async (data) => {
+const updateStatusNotification = async (id) => {
   try {
-    const notification = await db.Notifications.create({
-      data,
-    });
-    return notification;
+    const notification = await db.Notifications.findOne({ where: { id } });
+    if (!notification) {
+      throw new Error("Notification Không tồn tại");
+    }
+    return await db.Notifications.update({ is_read: true }, { where: { id } });
   } catch (error) {
     console.log(error);
   }
@@ -44,6 +62,6 @@ const deleteNotification = async (id) => {
 module.exports = {
   getAllNotification,
   getNotificationByUser,
-  createNotification,
+  updateStatusNotification,
   deleteNotification,
 };

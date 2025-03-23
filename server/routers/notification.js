@@ -7,6 +7,10 @@ router.route("/").get(notificationControllers.getAllNotification);
 router
   .route("/getByUser")
   .get(validateToken, notificationControllers.getNotificationByUser);
+router
+  .route("/updateStatus")
+  .put(notificationControllers.updateStatusNotification);
+
 router.route("/delete").delete(notificationControllers.deleteNotification);
 
 module.exports = router;

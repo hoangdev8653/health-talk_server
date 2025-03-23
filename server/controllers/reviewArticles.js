@@ -42,13 +42,12 @@ const getReviewByArticle = async (req, res, next) => {
 const createReview = async (req, res, next) => {
   try {
     const userId = req.userId;
-    const { content, likes, articleId, parentId } = req.body;
+    const { content, articleId } = req.body;
     const review = await reviewArticleServices.createReview({
       content,
-      likes,
+
       userId,
       articleId,
-      parentId,
     });
     return res
       .status(StatusCodes.CREATED)
@@ -57,11 +56,6 @@ const createReview = async (req, res, next) => {
     next(error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
   }
-};
-
-const updateReview = async (req, res, next) => {
-  try {
-  } catch (error) {}
 };
 
 const deleteReview = async (req, res, next) => {
@@ -82,6 +76,6 @@ module.exports = {
   getReviewById,
   getReviewByArticle,
   createReview,
-  updateReview,
+  // updateReview,
   deleteReview,
 };
