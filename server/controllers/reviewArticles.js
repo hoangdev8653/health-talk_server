@@ -39,13 +39,25 @@ const getReviewByArticle = async (req, res, next) => {
   }
 };
 
+const getReviewBySlugArticle = async (req, res, next) => {
+  try {
+    const slug = req.params.slug;
+    const review = await reviewArticleServices.getReviewBySlugArticle(slug);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: review });
+  } catch (error) {
+    next(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
+  }
+};
+
 const createReview = async (req, res, next) => {
   try {
     const userId = req.userId;
     const { content, articleId } = req.body;
     const review = await reviewArticleServices.createReview({
       content,
-
       userId,
       articleId,
     });
@@ -76,6 +88,6 @@ module.exports = {
   getReviewById,
   getReviewByArticle,
   createReview,
-  // updateReview,
+  getReviewBySlugArticle,
   deleteReview,
 };

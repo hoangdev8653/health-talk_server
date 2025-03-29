@@ -24,8 +24,12 @@ const getReviewByArticle = async (articleId) => {
   try {
     const review = await db.ReviewArticles.findAll({
       where: { articleId },
-      attributes: { exclude: ["userId"] },
+      attributes: { exclude: ["userId", "articleId"] },
       include: [
+        {
+          model: db.Articles,
+          attributes: ["id", "title", "slug"],
+        },
         {
           model: db.Users,
           attributes: ["id", "username", "email", "image"],
@@ -36,6 +40,33 @@ const getReviewByArticle = async (articleId) => {
       throw new Error("Review không tồn tại");
     }
     return review;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getReviewBySlugArticle = async (slug) => {
+  try {
+    const review = await db.ReviewArticles.findAll({
+      attributes: { exclude: ["userId", "articleId"] },
+      include: [
+        {
+          model: db.Articles,
+          attributes: ["id", "title", "slug"],
+        },
+        {
+          model: db.Users,
+          attributes: ["id", "username", "email", "image"],
+        },
+      ],
+    });
+    if (!review) {
+      throw new Error("Review không tồn tại");
+    }
+    const articleBySlugs = review.filter((review) => {
+      return review.Article.slug === slug;
+    });
+    return articleBySlugs;
   } catch (error) {
     console.log(error);
   }
@@ -74,7 +105,14 @@ const deleteReview = async (id) => {
     if (!review) {
       throw new Error("Review không tồn tại");
     }
-    return await db.ReviewArticles.destroy({ where: { id } });
+    const notification = await db.Notifications.findOne({
+      where: {
+        postId: review.articleId,
+        type: "comment",
+      },
+    });
+    return notification;
+    // return await db.ReviewArticles.destroy({ where: { id } });
   } catch (error) {
     console.log(error);
   }
@@ -84,6 +122,7 @@ module.exports = {
   getAllReview,
   getReviewById,
   getReviewByArticle,
+  getReviewBySlugArticle,
   createReview,
   deleteReview,
 };

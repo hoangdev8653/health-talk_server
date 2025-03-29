@@ -8,6 +8,18 @@ const getAllNotification = async () => {
   }
 };
 
+const getNotificationById = async (id) => {
+  try {
+    const notification = await db.Notifications.findOne({ where: { id } });
+    if (!notification) {
+      throw new Error("Notification Không tồn tại");
+    }
+    return notification;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const getNotificationByUser = async (userId) => {
   const notifications = await db.Notifications.findAll({
     where: { receiverId: userId },
@@ -61,6 +73,7 @@ const deleteNotification = async (id) => {
 
 module.exports = {
   getAllNotification,
+  getNotificationById,
   getNotificationByUser,
   updateStatusNotification,
   deleteNotification,

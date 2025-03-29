@@ -26,16 +26,34 @@ const getLikeByPostId = async (req, res, next) => {
   }
 };
 
+const getLikeBySlugArticle = async (req, res, next) => {
+  try {
+    const slug = req.params.slug;
+    const likes = await likeServices.getLikeBySlugArticle(slug);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: likes });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const createLike = async (req, res, next) => {
   try {
     const userId = req.userId;
-    console.log(userId);
+    // console.log(userId);
 
     const { postId } = req.body;
-    const like = await likeServices.createLike({ userId, postId });
-    return res
-      .status(StatusCodes.CREATED)
-      .json({ status: 201, message: "Xử lý thành công", content: like });
+    const { message, newListLike } = await likeServices.createLike({
+      userId,
+      postId,
+    });
+    return res.status(StatusCodes.CREATED).json({
+      status: 201,
+      content: newListLike,
+      message,
+    });
   } catch (error) {
     console.log(error);
     next(error);
@@ -58,6 +76,7 @@ const deleteLike = async (req, res, next) => {
 module.exports = {
   getAllLikes,
   getLikeByPostId,
+  getLikeBySlugArticle,
   createLike,
   deleteLike,
 };

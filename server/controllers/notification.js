@@ -15,6 +15,21 @@ const getAllNotification = async (req, res, next) => {
   }
 };
 
+const getNotificationById = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const notification = await notificationService.getNotificationById(id);
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      message: "Xử lý thành công",
+      content: notification,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const getNotificationByUser = async (req, res, next) => {
   try {
     const userId = req.userId;
@@ -79,6 +94,7 @@ const deleteNotification = async (req, res, next) => {
 
 module.exports = {
   getAllNotification,
+  getNotificationById,
   getNotificationByUser,
   updateStatusNotification,
   createNotification,

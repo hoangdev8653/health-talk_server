@@ -7,11 +7,11 @@ const getAllLikes = async () => {
       include: [
         {
           model: db.Articles,
-          attributes: ["id", "title", "image"],
+          attributes: ["id", "title", "slug"],
         },
         {
           model: db.Users,
-          attributes: ["id", "username", "email", "image"],
+          attributes: ["id", "username", "image"],
         },
       ],
     });
@@ -22,9 +22,45 @@ const getAllLikes = async () => {
 
 const getLikeByPostId = async (postId) => {
   try {
-    const likes = await db.Likes.findAll();
+    const likes = await db.Likes.findAll({
+      attributes: { exclude: ["userId", "postId"] },
+      include: [
+        {
+          model: db.Articles,
+          attributes: ["id", "title", "slug"],
+        },
+        {
+          model: db.Users,
+          attributes: ["id", "username", "image"],
+        },
+      ],
+    });
     const totalLikes = likes.filter((likes) => {
-      return likes.postId == postId;
+      return likes.Article.id == postId;
+    });
+    return totalLikes;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getLikeBySlugArticle = async (slug) => {
+  try {
+    const likes = await db.Likes.findAll({
+      attributes: { exclude: ["userId", "postId"] },
+      include: [
+        {
+          model: db.Articles,
+          attributes: ["id", "title", "slug"],
+        },
+        {
+          model: db.Users,
+          attributes: ["id", "username", "image"],
+        },
+      ],
+    });
+    const totalLikes = likes.filter((likes) => {
+      return likes.Article.slug == slug;
     });
     return totalLikes;
   } catch (error) {
@@ -34,15 +70,38 @@ const getLikeByPostId = async (postId) => {
 
 const createLike = async ({ userId, postId }) => {
   try {
-    const existingLike = await db.Likes.findOne({
+    const isLike = await db.Likes.findOne({
       where: { userId, postId },
     });
-    if (existingLike) {
-      await existingLike.destroy();
-      return "Bạn đã bỏ like bài viết này";
+    if (isLike) {
+      const checkNotification = await db.Notifications.findOne({
+        where: {
+          senderId: isLike.userId,
+          postId: isLike.postId,
+          type: "like",
+        },
+      });
+      await db.Notifications.destroy({ where: { id: checkNotification.id } });
+      await isLike.destroy();
+      const newListLike = await db.Likes.findAll({ where: { postId } });
+
+      return { message: "Bạn đã bỏ like bài viết này", newListLike };
     }
     await db.Likes.create({ userId, postId });
-    return "Bạn đã like bài viết này";
+    const userServices = require("../services/user");
+    const articleServices = require("../services/articles");
+    const user = await userServices.getUserById(userId);
+    const article = await articleServices.getArticleById(postId);
+    await db.Notifications.create({
+      receiverId: article.User.id,
+      senderId: userId,
+      postId: article.id,
+      type: "like",
+      message: `${user.username} đã like bài viết của bạn`,
+      is_read: false,
+    });
+    const newListLike = await db.Likes.findAll({ where: { postId } });
+    return { message: "Bạn đã like bài viết này", newListLike };
   } catch (error) {
     console.log(error);
     return "Có lỗi xảy ra";
@@ -64,6 +123,7 @@ const deleteLike = async (id) => {
 module.exports = {
   getAllLikes,
   getLikeByPostId,
+  getLikeBySlugArticle,
   createLike,
   deleteLike,
 };
