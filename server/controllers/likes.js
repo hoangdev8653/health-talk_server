@@ -42,8 +42,6 @@ const getLikeBySlugArticle = async (req, res, next) => {
 const createLike = async (req, res, next) => {
   try {
     const userId = req.userId;
-    // console.log(userId);
-
     const { postId } = req.body;
     const { message, newListLike } = await likeServices.createLike({
       userId,

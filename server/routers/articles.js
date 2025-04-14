@@ -7,11 +7,16 @@ const articlesControllers = require("../controllers/articles");
 
 router.route("/").get(articlesControllers.getAllArticle);
 router.route("/byId").get(articlesControllers.getArticleById);
-router.route("/:slug").get(articlesControllers.getArticleBySlug);
+router
+  .route("/byUser")
+  .get(validateToken, articlesControllers.getArticleByUser);
 router.route("/byCategory").get(articlesControllers.getArticlesByCategory);
 router
   .route("/byCategory/:slug")
   .get(articlesControllers.getArticleByCategorySlug);
+router.route("/search/").get(articlesControllers.getArticleByKey);
+router.route("/:slug").get(articlesControllers.getArticleBySlug);
+
 router
   .route("/create")
   .post(

@@ -28,7 +28,7 @@ const getUserById = async (id) => {
 
 const updateAvatar = async (userId, { image }) => {
   try {
-    const user = await db.Users.fillAll({ where: { id: userId } });
+    const user = await db.Users.findOne({ where: { id: userId } });
     if (!user) {
       throw new Error("User không tồn tại");
     }
@@ -37,6 +37,50 @@ const updateAvatar = async (userId, { image }) => {
       { where: { id: userId } }
     );
     return updateUser;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+const changePassword = async (userId, { password, newPassword }) => {
+  try {
+    const user = await db.Users.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new Error("User không tồn tại");
+    }
+    const isPasswordValid = await passwordMatch(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error("Mật khẩu không chính xác");
+    }
+    const newPasswordHashed = await hashPassword(newPassword);
+    const updated = await db.Users.update(
+      { password: newPasswordHashed },
+      { where: { id: userId } }
+    );
+
+    if (updated[0] === 0) {
+      throw new Error("Không có bản ghi nào được cập nhật");
+    }
+
+    return { message: "Cập nhật mật khẩu thành công!" };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+const updateRole = async (userId, { role }) => {
+  try {
+    const user = await db.Users.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new Error("User không tồn tại");
+    }
+    const updatedUser = await db.Users.update(
+      { role },
+      { where: { id: userId } }
+    );
+    return updatedUser;
   } catch (error) {
     console.log(error);
     throw error;
@@ -89,11 +133,22 @@ const refreshToken = async (refreshToken) => {
   }
 };
 
+const deleteUser = async (idid) => {
+  const user = await db.Users.findOne({ where: { id } });
+  if (!user) {
+    throw new Error("User không tồn tại");
+  }
+  return await db.Users.distroy({ where: { id } });
+};
+
 module.exports = {
   getAllUser,
   getUserById,
   register,
   login,
+  changePassword,
   updateAvatar,
+  updateRole,
   refreshToken,
+  deleteUser,
 };

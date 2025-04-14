@@ -13,6 +13,18 @@ const getAllCategories = async (req, res, next) => {
     next(error);
   }
 };
+const getCategoryBykey = async (req, res, next) => {
+  try {
+    const keySearch = req.query.s;
+    const categories = await categoriesServices.getCategoryBykey(keySearch);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, messeage: "Xử lý thành công", content: categories });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
 
 const createCategories = async (req, res, next) => {
   try {
@@ -50,6 +62,7 @@ const deleteCategories = async (req, res, next) => {
 
 module.exports = {
   getAllCategories,
+  getCategoryBykey,
   createCategories,
   deleteCategories,
 };

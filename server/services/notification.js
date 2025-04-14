@@ -59,13 +59,17 @@ const updateStatusNotification = async (id) => {
   }
 };
 
-const deleteNotification = async (id) => {
+const deleteNotification = async (id, userId) => {
   try {
+    console.log(userId);
+
     const notification = await db.Notifications.findOne({ where: { id } });
     if (!notification) {
       throw new Error("Notification Không tồn tại");
     }
-    return await db.Notifications.destroy({ where: { id } });
+    await db.Notifications.destroy({ where: { id } });
+    const newNotification = await getNotificationByUser(userId);
+    return newNotification;
   } catch (error) {
     console.log(error);
   }

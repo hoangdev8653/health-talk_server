@@ -1,8 +1,23 @@
+const { Op } = require("sequelize");
 const db = require("../models");
 
 const getAllCategories = async () => {
   try {
     return await db.Categories.findAll();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getCategoryBykey = async (name) => {
+  try {
+    return await db.Categories.findAll({
+      where: {
+        name: {
+          [Op.like]: `%${name}%`,
+        },
+      },
+    });
   } catch (error) {
     console.log(error);
   }
@@ -45,6 +60,7 @@ const deleteCategories = async (id) => {
 
 module.exports = {
   getAllCategories,
+  getCategoryBykey,
   createCategories,
   updateCategories,
   deleteCategories,

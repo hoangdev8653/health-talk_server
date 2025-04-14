@@ -84,7 +84,9 @@ const createReview = async ({ content, userId, articleId }) => {
     const userServices = require("../services/user");
     const user = await userServices.getUserById(userId);
     const article = await articleServices.getArticleById(articleId);
-
+    if (userId === article.User.id) {
+      return review;
+    }
     await db.Notifications.create({
       receiverId: article.User.id,
       senderId: userId,
@@ -112,7 +114,6 @@ const deleteReview = async (id) => {
       },
     });
     return notification;
-    // return await db.ReviewArticles.destroy({ where: { id } });
   } catch (error) {
     console.log(error);
   }

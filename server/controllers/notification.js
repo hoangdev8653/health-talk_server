@@ -80,7 +80,11 @@ const updateStatusNotification = async (req, res, next) => {
 const deleteNotification = async (req, res, next) => {
   try {
     const id = req.query.id;
-    const notification = await notificationService.deleteNotification(id);
+    const userId = req.userId;
+    const notification = await notificationService.deleteNotification(
+      id,
+      userId
+    );
     return res.status(StatusCodes.OK).json({
       status: 200,
       message: "Xử lý thành công",

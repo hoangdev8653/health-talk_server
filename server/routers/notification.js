@@ -12,6 +12,8 @@ router
   .route("/updateStatus")
   .put(notificationControllers.updateStatusNotification);
 
-router.route("/delete").delete(notificationControllers.deleteNotification);
+router
+  .route("/delete")
+  .delete(validateToken, notificationControllers.deleteNotification);
 
 module.exports = router;

@@ -92,14 +92,17 @@ const createLike = async ({ userId, postId }) => {
     const articleServices = require("../services/articles");
     const user = await userServices.getUserById(userId);
     const article = await articleServices.getArticleById(postId);
-    await db.Notifications.create({
-      receiverId: article.User.id,
-      senderId: userId,
-      postId: article.id,
-      type: "like",
-      message: `${user.username} đã like bài viết của bạn`,
-      is_read: false,
-    });
+    if (userId === !article.User.id) {
+      await db.Notifications.create({
+        receiverId: article.User.id,
+        senderId: userId,
+        postId: article.id,
+        type: "like",
+        message: `${user.username} đã like bài viết của bạn`,
+        is_read: false,
+      });
+    }
+
     const newListLike = await db.Likes.findAll({ where: { postId } });
     return { message: "Bạn đã like bài viết này", newListLike };
   } catch (error) {

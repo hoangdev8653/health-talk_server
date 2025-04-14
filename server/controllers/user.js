@@ -77,6 +77,37 @@ const login = async (req, res, next) => {
   }
 };
 
+const changePassword = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const { password, newPassword } = req.body;
+    const user = await userServices.changePassword(userId, {
+      password,
+      newPassword,
+    });
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, messeage: "Xử lý thành công", content: user });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const updateRole = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const { role } = req.body;
+    const user = await userServices.updateRole(userId, { role });
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, messeage: "Xử lý thành công", content: user });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const refreshToken = async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
@@ -94,11 +125,27 @@ const refreshToken = async (req, res, next) => {
   }
 };
 
+const deleteUser = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const user = await userServices.deleteUser(id);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, messeage: "Xử lý thành công", content: user });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 module.exports = {
   getAllUser,
   getUserById,
   updateAvatar,
+  changePassword,
+  updateRole,
   register,
   login,
   refreshToken,
+  deleteUser,
 };

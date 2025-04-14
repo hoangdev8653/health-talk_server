@@ -13,8 +13,13 @@ router
     validateToken,
     userControllers.updateAvatar
   );
+router
+  .route("/changePassword")
+  .post(validateToken, userControllers.changePassword);
+router.route("/updateRole").post(validateToken, userControllers.updateRole);
 router.route("/dang-ki").post(userControllers.register);
 router.route("/dang-nhap").post(userControllers.login);
 router.route("/refreshToken").post(userControllers.refreshToken);
+router.route("/delete").delete(userControllers.deleteUser);
 
 module.exports = router;

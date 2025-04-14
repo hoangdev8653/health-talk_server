@@ -1,6 +1,7 @@
 const db = require("../models");
 const reviewArticleServices = require("../services/reviewArticles");
 const likeServices = require("../services/likes");
+const { Op } = require("sequelize");
 
 const getAllArticle = async () => {
   try {
@@ -42,6 +43,33 @@ const getArticleById = async (id) => {
       throw new Error("Article không tồn tại");
     }
     return article;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getArticleByUser = async (userId) => {
+  try {
+    console.log(userId);
+
+    const articles = await db.Articles.findAll({
+      where: { userId },
+      attributes: { exclude: ["userId", "categoryId"] },
+      include: [
+        {
+          model: db.Categories,
+          attributes: ["id", "name", "slug"],
+        },
+        {
+          model: db.Users,
+          attributes: ["id", "username", "email", "image"],
+        },
+      ],
+    });
+    if (!articles) {
+      return [];
+    }
+    return articles;
   } catch (error) {
     console.log(error);
   }
@@ -120,6 +148,19 @@ const getArticleByCategorySlug = async (slug) => {
   }
 };
 
+const getArticleByKey = async (title) => {
+  try {
+    const articles = await db.Articles.findAll({
+      where: { title: { [Op.iLike]: `%${title}%` } },
+    });
+    const length = articles.length;
+    return { articles, length };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const createArticle = async ({
   title,
   content,
@@ -170,9 +211,11 @@ const deleteArticle = async (id) => {
 module.exports = {
   getAllArticle,
   getArticleById,
+  getArticleByUser,
   getArticleBySlug,
   getArticlesByCategory,
   getArticleByCategorySlug,
+  getArticleByKey,
   createArticle,
   updateCategoryIdArticle,
   deleteArticle,

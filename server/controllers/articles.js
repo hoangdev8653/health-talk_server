@@ -14,6 +14,19 @@ const getAllArticle = async (req, res, next) => {
   }
 };
 
+const getArticleByUser = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const articles = await articlesServices.getArticleByUser(userId);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: articles });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const getArticleById = async (req, res, next) => {
   try {
     const id = req.query.id;
@@ -66,6 +79,24 @@ const getArticleByCategorySlug = async (req, res, next) => {
     return res
       .status(StatusCodes.OK)
       .json({ status: 200, message: "Xử lý thành công", content: article });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const getArticleByKey = async (req, res, next) => {
+  try {
+    const keySearch = req.query.s;
+    const { articles, length } = await articlesServices.getArticleByKey(
+      keySearch
+    );
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      message: "Xử lý thành công",
+      content: articles,
+      length,
+    });
   } catch (error) {
     console.log(error);
     next(error);
@@ -132,9 +163,11 @@ const deleteArticle = async (req, res, next) => {
 module.exports = {
   getAllArticle,
   getArticleById,
+  getArticleByUser,
   getArticleBySlug,
   getArticlesByCategory,
   getArticleByCategorySlug,
+  getArticleByKey,
   createArticle,
   updateCategoryIdArticle,
   deleteArticle,
