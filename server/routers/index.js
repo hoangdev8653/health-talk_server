@@ -6,6 +6,7 @@ const bannerRouter = require("./banner");
 const reviewArticlesRouter = require("./reviewArticles");
 const notificationRouter = require("./notification");
 const likeRouter = require("./likes");
+const managerRouter = require("./managerUsers");
 
 const routers = {
   user: userRouter,
@@ -16,6 +17,7 @@ const routers = {
   reviewArticle: reviewArticlesRouter,
   notification: notificationRouter,
   like: likeRouter,
+  managerUser: managerRouter,
 };
 
 module.exports = routers;

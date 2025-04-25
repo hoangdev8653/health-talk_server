@@ -6,7 +6,8 @@ const cors = require("cors");
 const morgan = require("morgan");
 const dbconn = require("./config/dbconnect");
 const routers = require("./routers/index");
-
+const http = require("http");
+const { connectSocket } = require("./config/connectSocket");
 const port = process.env.PORT;
 
 const app = express();
@@ -16,7 +17,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
-
+const server = http.createServer(app);
+connectSocket(server);
 dbconn();
 
 app.use("/user", routers.user);
@@ -27,6 +29,7 @@ app.use("/banner", routers.banner);
 app.use("/reviewArticle", routers.reviewArticle);
 app.use("/notification", routers.notification);
 app.use("/like", routers.like);
+app.use("/managerUser", routers.managerUser);
 
 app.use((req, res, next) => {
   next(createHttpError(404, "Not Found"));
@@ -39,6 +42,6 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

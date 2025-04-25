@@ -116,8 +116,10 @@ const login = async ({ email, password }) => {
     if (!isMatch) {
       throw new Error("Mật khẩu không đúng");
     }
+    const managerServices = require("../services/managerUsers");
+    const checkblock = await managerServices.checkIsBlockByUserId(user.id);
     const { accessToken, refreshToken } = generateToken(user.id);
-    return { user, accessToken, refreshToken };
+    return { user, accessToken, refreshToken, checkblock };
   } catch (error) {
     console.log(error);
   }
