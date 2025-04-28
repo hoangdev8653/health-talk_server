@@ -47,6 +47,28 @@ const createCategories = async (req, res, next) => {
   }
 };
 
+const updateCategories = async (req, res, next) => {
+  try {
+    const { name, description } = req.body;
+    const fileImage = req.file;
+    const id = req.query.id;
+    const slug = customSlug(name);
+    const categories = await categoriesServices.updateCategories({
+      id,
+      name,
+      image: fileImage?.path,
+      description,
+      slug,
+    });
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, messeage: "Xử lý thành công", content: categories });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const deleteCategories = async (req, res, next) => {
   try {
     const id = req.query.id;
@@ -64,5 +86,6 @@ module.exports = {
   getAllCategories,
   getCategoryBykey,
   createCategories,
+  updateCategories,
   deleteCategories,
 };

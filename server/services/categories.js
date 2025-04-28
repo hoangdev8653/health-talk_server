@@ -31,14 +31,14 @@ const createCategories = async ({ name, image, description, slug }) => {
   }
 };
 
-const updateCategories = async ({ id, name, image, description }) => {
+const updateCategories = async ({ id, name, image, description, slug }) => {
   try {
     const category = await db.Categories.findOne({ where: { id } });
     if (!category) {
       throw new Error("Category không tồn tại");
     }
     return await db.Categories.update(
-      { name, image, description },
+      { name, image, description, slug },
       { where: { id } }
     );
   } catch (error) {

@@ -11,13 +11,13 @@ const validateToken = async (req, res, next) => {
         token,
         process.env.SECRET_KEY || "secretkey"
       );
+      req.role = decoded.role;
       req.userId = decoded.userId;
       next();
     } catch (error) {
       if (error.name === "JsonWebTokenError") {
         console.log("Token is InValid or has expired");
       }
-      console.log("Error234: ", error.name);
       res
         .status(StatusCodes.UNAUTHORIZED)
         .json({ error: "Token is Invalid or has expired" });

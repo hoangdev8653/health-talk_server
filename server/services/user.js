@@ -118,7 +118,7 @@ const login = async ({ email, password }) => {
     }
     const managerServices = require("../services/managerUsers");
     const checkblock = await managerServices.checkIsBlockByUserId(user.id);
-    const { accessToken, refreshToken } = generateToken(user.id);
+    const { accessToken, refreshToken } = generateToken(user.id, user.role);
     return { user, accessToken, refreshToken, checkblock };
   } catch (error) {
     console.log(error);
