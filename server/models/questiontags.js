@@ -6,12 +6,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       QuestionTags.belongsTo(models.Questions, {
         foreignKey: "questionId",
-        as: "question",
+        as: "questions",
       });
 
       QuestionTags.belongsTo(models.Tags, {
         foreignKey: "tagId",
-        as: "tag",
+        as: "tags",
       });
     }
   }

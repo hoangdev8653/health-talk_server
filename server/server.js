@@ -31,6 +31,9 @@ app.use("/notification", routers.notification);
 app.use("/like", routers.like);
 app.use("/managerUser", routers.managerUser);
 app.use("/question", routers.question);
+app.use("/tag", routers.tag);
+app.use("/answer", routers.answer);
+app.use("/questionTag", routers.questionTag);
 
 app.use((req, res, next) => {
   next(createHttpError(404, "Not Found"));

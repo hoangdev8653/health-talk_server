@@ -5,6 +5,11 @@ module.exports = (sequelize, DataTypes) => {
   class Questions extends Model {
     static associate(models) {
       Questions.belongsTo(models.Users, { foreignKey: "userId" });
+      Questions.belongsToMany(models.Tags, {
+        through: "QuestionTags",
+        foreignKey: "questionId",
+        as: "tags",
+      });
     }
   }
 
@@ -35,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
           model: "Users",
           key: "id",
         },
+      },
+      slug: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
     },
     {

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const uploadCloud = require("../middlewares/cloudinary");
-import validateToken from "../middlewares/auth";
+const validateToken = require("../middlewares/auth");
 
 const articlesControllers = require("../controllers/articles");
 

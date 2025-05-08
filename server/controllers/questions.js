@@ -1,5 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const questionServices = require("../services/questions");
+const customSlug = require("../utils/customSlug");
 
 const getAllQuestions = async (req, res, next) => {
   try {
@@ -16,7 +17,29 @@ const getAllQuestions = async (req, res, next) => {
 const getQuestionById = async (req, res, next) => {
   try {
     const id = req.query.id;
-    const question = await questionServices.getQuestionById(id);
+    const userId = req.userId || null;
+    const isUser = !!userId;
+    const question = await questionServices.getQuestionById(id, isUser);
+
+    res.status(StatusCodes.OK).json({
+      status: 200,
+      message: "Xử lý thành công",
+      content: question,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const getQuestionBySlug = async (req, res, next) => {
+  try {
+    const slug = req.params.slug;
+    const userId = req.userId || null;
+    const isUser = !!userId;
+    console.log(slug);
+
+    const question = await questionServices.getQuestionBySlug(slug, isUser);
     res
       .status(StatusCodes.OK)
       .json({ status: 200, message: "Xử lý thành công", content: question });
@@ -26,11 +49,31 @@ const getQuestionById = async (req, res, next) => {
   }
 };
 
-const createQuestion = async (req, res, next) => {
+const getQuestionByTag = async (req, res, next) => {
   try {
-    const question = req.body;
-    const newQuestion = await questionServices.createQuestion(question);
-    res
+    const id = req.query.id;
+    const question = await questionServices.getQuestionByTag(id);
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Xử lý thành công", content: question });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const createQuestionTag = async (req, res, next) => {
+  try {
+    const { title, content, tags } = req.body;
+    const userId = req.userId;
+    const slug = customSlug(title);
+    const newQuestion = await questionServices.createQuestionTag(userId, {
+      title,
+      content,
+      slug,
+      tags,
+    });
+    return res
       .status(StatusCodes.CREATED)
       .json({ status: 201, message: "Xử lý thành công", content: newQuestion });
   } catch (error) {
@@ -71,7 +114,9 @@ const deleteQuestion = async (req, res, next) => {
 module.exports = {
   getAllQuestions,
   getQuestionById,
-  createQuestion,
+  getQuestionBySlug,
+  getQuestionByTag,
+  createQuestionTag,
   updateQuestion,
   deleteQuestion,
 };

@@ -2,7 +2,13 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Tags extends Model {
-    static associate(models) {}
+    static associate(models) {
+      Tags.belongsToMany(models.Questions, {
+        through: "QuestionTags",
+        foreignKey: "tagId",
+        as: "questions",
+      });
+    }
   }
   Tags.init(
     {
@@ -17,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       content: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      slug: {
         type: DataTypes.TEXT,
         allowNull: false,
       },
