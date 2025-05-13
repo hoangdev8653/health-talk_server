@@ -3,13 +3,18 @@ const userServices = require("../services/user");
 
 const getAllUser = async (req, res, next) => {
   try {
-    const user = await userServices.getAllUser();
-    return res
-      .status(StatusCodes.OK)
-      .json({ status: 200, messeage: "Xử lý thành công", content: user });
+    const users = await userServices.getAllUser();
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      message: "Xử lý thành công",
+      content: users,
+    });
   } catch (error) {
-    console.log(error);
-    next(error);
+    console.error(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 500,
+      message: "Không thể lấy danh sách người dùng",
+    });
   }
 };
 
@@ -17,14 +22,23 @@ const getUserById = async (req, res, next) => {
   try {
     const id = req.query.id;
     const user = await userServices.getUserById(id);
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        status: 404,
+        message: "Người dùng không tồn tại",
+      });
+    }
     return res.status(StatusCodes.OK).json({
       status: 200,
-      messeage: "Xử lý thành công",
+      message: "Xử lý thành công",
       content: user,
     });
   } catch (error) {
-    console.log(error);
-    next(error);
+    console.error(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 500,
+      message: "Không thể lấy thông tin người dùng",
+    });
   }
 };
 
@@ -32,15 +46,26 @@ const updateAvatar = async (req, res, next) => {
   try {
     const userId = req.userId;
     const fileData = req.file;
+    if (!fileData) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        status: 400,
+        message: "Không có tệp được tải lên",
+      });
+    }
     const user = await userServices.updateAvatar(userId, {
-      image: fileData?.path,
+      image: fileData.path,
     });
-    return res
-      .status(StatusCodes.OK)
-      .json({ status: 200, messeage: "Xử lý thành công", content: user });
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      message: "Cập nhật ảnh đại diện thành công",
+      content: user,
+    });
   } catch (error) {
-    console.log(error);
-    next(error);
+    console.error(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 500,
+      message: "Không thể cập nhật ảnh đại diện",
+    });
   }
 };
 
@@ -48,12 +73,17 @@ const register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
     const user = await userServices.register({ username, email, password });
-    return res
-      .status(StatusCodes.OK)
-      .json({ status: 200, messeage: "Xử lý thành công", content: user });
+    return res.status(StatusCodes.CREATED).json({
+      status: 201,
+      message: "Đăng ký thành công",
+      content: user,
+    });
   } catch (error) {
-    console.log(error);
-    next(error);
+    console.error(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 500,
+      message: "Không thể đăng ký người dùng",
+    });
   }
 };
 
@@ -61,21 +91,31 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const { user, accessToken, refreshToken, checkblock } =
-      await userServices.login({
-        email,
-        password,
-      });
+      await userServices.login({ email, password });
+
     return res.status(StatusCodes.OK).json({
       status: 200,
-      messeage: "Xử lý thành công",
+      message: "Đăng nhập thành công",
       content: user,
       isBlock: checkblock,
       accessToken,
       refreshToken,
     });
   } catch (error) {
-    console.log(error);
-    next(error);
+    console.error(error.message);
+    if (
+      error.message === "Email không tồn tại" ||
+      error.message === "Mật khẩu không đúng"
+    ) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        status: 400,
+        message: error.message,
+      });
+    }
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 500,
+      message: "Không thể đăng nhập",
+    });
   }
 };
 
@@ -87,12 +127,17 @@ const changePassword = async (req, res, next) => {
       password,
       newPassword,
     });
-    return res
-      .status(StatusCodes.OK)
-      .json({ status: 200, messeage: "Xử lý thành công", content: user });
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      message: "Đổi mật khẩu thành công",
+      content: user,
+    });
   } catch (error) {
-    console.log(error);
-    next(error);
+    console.error(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 500,
+      message: "Không thể đổi mật khẩu",
+    });
   }
 };
 
@@ -101,12 +146,17 @@ const updateRole = async (req, res, next) => {
     const userId = req.userId;
     const { role } = req.body;
     const user = await userServices.updateRole(userId, { role });
-    return res
-      .status(StatusCodes.OK)
-      .json({ status: 200, messeage: "Xử lý thành công", content: user });
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      message: "Cập nhật vai trò thành công",
+      content: user,
+    });
   } catch (error) {
-    console.log(error);
-    next(error);
+    console.error(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 500,
+      message: "Không thể cập nhật vai trò",
+    });
   }
 };
 
@@ -116,12 +166,15 @@ const refreshToken = async (req, res, next) => {
     const newToken = await userServices.refreshToken(refreshToken);
     return res.status(StatusCodes.OK).json({
       status: 200,
-      messeage: "xử lý thành công",
+      message: "Làm mới token thành công",
       newToken,
     });
   } catch (error) {
-    console.log(error);
-    next(error);
+    console.error(error);
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      status: 401,
+      message: "Token không hợp lệ hoặc đã hết hạn",
+    });
   }
 };
 
@@ -129,12 +182,23 @@ const deleteUser = async (req, res, next) => {
   try {
     const id = req.query.id;
     const user = await userServices.deleteUser(id);
-    return res
-      .status(StatusCodes.OK)
-      .json({ status: 200, messeage: "Xử lý thành công", content: user });
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        status: 404,
+        message: "Người dùng không tồn tại",
+      });
+    }
+    return res.status(StatusCodes.OK).json({
+      status: 200,
+      message: "Xóa người dùng thành công",
+      content: user,
+    });
   } catch (error) {
-    console.log(error);
-    next(error);
+    console.error(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 500,
+      message: "Không thể xóa người dùng",
+    });
   }
 };
 

@@ -7,10 +7,7 @@ const validateToken = async (req, res, next) => {
   if (authHeader && authHeader.startsWith("Bearer")) {
     token = authHeader.slice(7);
     try {
-      const decoded = await jwt.verify(
-        token,
-        process.env.SECRET_KEY || "secretkey"
-      );
+      const decoded = await jwt.verify(token, process.env.SECRET_KEY);
       req.role = decoded.role;
       req.userId = decoded.userId;
       next();
