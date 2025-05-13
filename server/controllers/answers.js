@@ -46,7 +46,8 @@ const getAnswerBySlug = async (req, res, next) => {
 const createAnswer = async (req, res, next) => {
   try {
     const userId = req.userId;
-    const { content, questionId } = req.body;
+    const { content, questionId } = req.body
+
     const newAnswer = await answerServices.createAnswer(userId, {
       content,
       questionId,

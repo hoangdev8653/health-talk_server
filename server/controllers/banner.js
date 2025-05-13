@@ -38,6 +38,8 @@ const createBanner = async (req, res, next) => {
 const deleteBanner = async (req, res, next) => {
   try {
     const id = req.query.id;
+    console.log(id);
+
     const banner = await bannerServices.deleteBanner(id);
     return res
       .status(StatusCodes.OK)

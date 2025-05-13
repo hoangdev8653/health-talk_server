@@ -8,6 +8,6 @@ router.route("/").get(bannerControllers.getAllBanner);
 router
   .route("/create")
   .post(uploadCloud.single("image"), bannerControllers.createBanner);
-router.route("delete").delete(bannerControllers.deleteBanner);
+router.route("/delete").delete(bannerControllers.deleteBanner);
 
 module.exports = router;

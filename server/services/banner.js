@@ -23,6 +23,8 @@ const createBanner = async ({ title, image, slug }) => {
 const deleteBanner = async (id) => {
   try {
     const banner = await db.Banners.findOne({ where: { id } });
+    console.log(id);
+
     if (!banner) {
       throw new Error("Banner không tồn tại");
     }

@@ -30,7 +30,7 @@ const getUserById = async (req, res, next) => {
 
 const updateAvatar = async (req, res, next) => {
   try {
-    const userId = req.UserId;
+    const userId = req.userId;
     const fileData = req.file;
     const user = await userServices.updateAvatar(userId, {
       image: fileData?.path,

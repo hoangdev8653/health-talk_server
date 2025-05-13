@@ -14,7 +14,7 @@ router
     userControllers.updateAvatar
   );
 router
-  .route("/changePassword")
+  .route("/updatePassword")
   .post(validateToken, userControllers.changePassword);
 router.route("/updateRole").post(validateToken, userControllers.updateRole);
 router.route("/dang-ki").post(userControllers.register);

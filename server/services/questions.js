@@ -16,7 +16,20 @@ const getAllQuestions = async () => {
       },
     ],
   });
-  return questions;
+
+  const answerServices = require("../services/answers");
+
+  const questionsWithAnswerCount = await Promise.all(
+    questions.map(async (question) => {
+      const answers = await answerServices.getAnswerBySlug(question.slug);
+      return {
+        ...question.toJSON(),
+        answerCount: answers.length,
+      };
+    })
+  );
+
+  return questionsWithAnswerCount;
 };
 
 const getQuestionById = async (id, isUser) => {

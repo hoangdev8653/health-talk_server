@@ -5,9 +5,11 @@ const customSlug = require("../utils/customSlug");
 const getAllQuestions = async (req, res, next) => {
   try {
     const questions = await questionServices.getAllQuestions();
-    res
-      .status(StatusCodes.OK)
-      .json({ status: 200, message: "Xử lý thành công", content: questions });
+    res.status(StatusCodes.OK).json({
+      status: 200,
+      message: "Xử lý thành công",
+      content: questions,
+    });
   } catch (error) {
     console.log(error);
     next(error);
