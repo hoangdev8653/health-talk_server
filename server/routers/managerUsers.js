@@ -7,6 +7,6 @@ router.route("/").get(managerUserController.getAllBlockedUsers);
 router.route("/check-block").get(managerUserController.checkIsBlockByUserId);
 router.route("/block").post(validateToken, managerUserController.blockUser);
 router.route("/unblock").post(validateToken, managerUserController.unblockUser);
-router.route("/delete").post(managerUserController.deleteBlockedUser);
+router.route("/delete").delete(managerUserController.deleteBlockedUser);
 
 module.exports = router;

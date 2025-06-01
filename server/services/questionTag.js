@@ -44,7 +44,7 @@ const getByQuestionId = async (questionId) => {
         {
           model: db.Questions,
           as: "questions",
-          attributes: ["id", "title", "content", "slug", "views"], // chỉ chọn field cần thiết
+          attributes: ["id", "title", "content", "slug", "views"],
         },
         {
           model: db.Tags,

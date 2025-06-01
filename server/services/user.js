@@ -5,8 +5,20 @@ const verifyRefreshToken = require("../middlewares/verifyRefreshToken");
 
 const getAllUser = async () => {
   try {
-    const users = await db.Users.findAll();
-    return users;
+    const allUsers = await db.Users.findAll();
+    const managerServices = require("../services/managerUsers");
+    const blockedUserRecords = await managerServices.getAllBlockedUsers();
+    const blockedUserIds = blockedUserRecords
+      .filter((record) => record.isBlocked === true)
+      .map((record) => record.userBlocked.id);
+    const activeUserIds = allUsers
+      .map((user) => user.id)
+      .filter((id) => !blockedUserIds.includes(id));
+    const activeUsers = allUsers.filter((user) =>
+      activeUserIds.includes(user.id)
+    );
+
+    return activeUsers || [];
   } catch (error) {
     console.log(error);
     throw error;
@@ -70,16 +82,13 @@ const changePassword = async (userId, { password, newPassword }) => {
   }
 };
 
-const updateRole = async (userId, { role }) => {
+const updateRole = async (userId, { role, id }) => {
   try {
     const user = await db.Users.findOne({ where: { id: userId } });
     if (!user) {
       throw new Error("User không tồn tại");
     }
-    const updatedUser = await db.Users.update(
-      { role },
-      { where: { id: userId } }
-    );
+    const updatedUser = await db.Users.update({ role }, { where: { id } });
     return updatedUser;
   } catch (error) {
     console.log(error);
@@ -119,6 +128,8 @@ const login = async ({ email, password }) => {
     const managerServices = require("../services/managerUsers");
     const checkblock = await managerServices.checkIsBlockByUserId(user.id);
     const { accessToken, refreshToken } = generateToken(user.id, user.role);
+    // console.log(refreshToken);
+
     return { user, accessToken, refreshToken, checkblock };
   } catch (error) {
     console.log(error);
@@ -127,15 +138,15 @@ const login = async ({ email, password }) => {
 
 const refreshToken = async (refreshToken) => {
   try {
-    const { userId } = await verifyRefreshToken(refreshToken);
-    const newToken = generateToken(userId);
+    const { userId, role } = await verifyRefreshToken(refreshToken);
+    const newToken = generateToken(userId, role);
     return newToken;
   } catch (error) {
     console.log(error);
   }
 };
 
-const deleteUser = async (idid) => {
+const deleteUser = async (id) => {
   const user = await db.Users.findOne({ where: { id } });
   if (!user) {
     throw new Error("User không tồn tại");

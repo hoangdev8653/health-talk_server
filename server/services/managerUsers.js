@@ -2,17 +2,17 @@ const db = require("../models");
 
 const getAllBlockedUsers = async () => {
   return await db.ManagerUsers.findAll({
-    attributes: { exclude: ["userBlocked", "blockedBy"] },
+    attributes: { exclude: ["userBlockedId", "blockedById"] },
     include: [
       {
         model: db.Users,
         as: "blockedBy",
-        attributes: ["id", "username", "email", "image"],
+        attributes: ["id", "username", "email", "image", "role"],
       },
       {
         model: db.Users,
         as: "userBlocked",
-        attributes: ["id", "username", "email", "image"],
+        attributes: ["id", "username", "email", "image", "role"],
       },
     ],
   });
@@ -50,12 +50,12 @@ const blockUser = async (
   { blockedById, userBlockedId, blockReason }
 ) => {
   try {
-    const isUser = await db.Users.findOne({
+    const user = await db.Users.findOne({
       where: {
         id: userId,
       },
     });
-    if (!isUser) {
+    if (!user || !user.role === "admin") {
       throw new Error("User not found");
     }
     const blockUser = await db.ManagerUsers.create({
@@ -90,6 +90,7 @@ const unblockUser = async (id) => {
       where: { id },
     }
   );
+
   return unblockUser;
 };
 

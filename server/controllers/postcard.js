@@ -20,7 +20,7 @@ const getAllPostcard = async (req, res, next) => {
 
 const createPostcard = async (req, res, next) => {
   try {
-    const { title, description } = req.body;
+    const { title, decription } = req.body;
     const fileVideo = req.files?.["video_url"]?.[0] || null;
     const fileImage = req.files?.["image"]?.[0] || null;
 
@@ -33,7 +33,7 @@ const createPostcard = async (req, res, next) => {
 
     const postcard = await postcardServices.createPostcard({
       title,
-      description,
+      decription,
       video_url: fileVideo?.path,
       image: fileImage?.path,
     });

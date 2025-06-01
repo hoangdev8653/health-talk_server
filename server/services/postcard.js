@@ -33,7 +33,6 @@ const updatePostcard = async ({ id, title, decription, video_url }) => {
 
 const deletePostcard = async (id) => {
   try {
-    console.log(id);
     const postcard = await db.Postcards.findOne({ where: { id } });
     if (!postcard) {
       throw new Error("Postcard không tồn tại");

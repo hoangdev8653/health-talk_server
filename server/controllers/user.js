@@ -1,5 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const userServices = require("../services/user");
+const { serialize } = require("cookie");
 
 const getAllUser = async (req, res, next) => {
   try {
@@ -93,6 +94,17 @@ const login = async (req, res, next) => {
     const { user, accessToken, refreshToken, checkblock } =
       await userServices.login({ email, password });
 
+    res.setHeader(
+      "Set-Cookie",
+      serialize("token", accessToken, {
+        httpOnly: true,
+        path: "/",
+        maxAge: 60 * 60 * 24, // 1 ngày
+        sameSite: "strict",
+        // secure: process.env.NODE_ENV === 'production',
+      })
+    );
+
     return res.status(StatusCodes.OK).json({
       status: 200,
       message: "Đăng nhập thành công",
@@ -144,8 +156,8 @@ const changePassword = async (req, res, next) => {
 const updateRole = async (req, res, next) => {
   try {
     const userId = req.userId;
-    const { role } = req.body;
-    const user = await userServices.updateRole(userId, { role });
+    const { role, id } = req.body;
+    const user = await userServices.updateRole(userId, { role, id });
     return res.status(StatusCodes.OK).json({
       status: 200,
       message: "Cập nhật vai trò thành công",
