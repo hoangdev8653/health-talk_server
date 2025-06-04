@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       type: {
-        type: DataTypes.ENUM("like", "commemt"),
+        type: DataTypes.ENUM("like", "comment", "block", "unblock"),
       },
       message: DataTypes.STRING,
       is_read: DataTypes.BOOLEAN,

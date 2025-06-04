@@ -107,10 +107,10 @@ const createArticle = async (req, res, next) => {
   try {
     const userId = req.userId;
     const { title, content, categoryId } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
 
     const fileImage = req.file;
-    console.log(fileImage);
+    // console.log(fileImage);
 
     const slug = customSlug(title);
     const article = await articlesServices.createArticle({

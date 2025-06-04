@@ -47,9 +47,8 @@ const blockUser = async (req, res, next) => {
 
 const unblockUser = async (req, res, next) => {
   try {
-    const userId = req.userId;
     const id = req.query.id;
-    const unblockUser = await managerServices.unblockUser(userId, id);
+    const unblockUser = await managerServices.unblockUser(id);
     return res
       .status(StatusCodes.OK)
       .json({ status: 200, message: "Xử lý thành công", content: unblockUser });

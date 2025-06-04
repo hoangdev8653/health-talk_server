@@ -34,7 +34,7 @@ module.exports = {
         },
       },
       type: {
-        type: Sequelize.ENUM("like", "comment"),
+        type: Sequelize.ENUM("like", "comment", "block", "unblock"),
         allowNull: false,
       },
       message: {
