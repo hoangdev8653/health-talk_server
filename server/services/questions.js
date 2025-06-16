@@ -75,12 +75,11 @@ const getQuestionBySlug = async (slug, isUser) => {
   if (!questionData) {
     throw new Error("Question not found");
   }
-  if (isUser) {
-    await db.Questions.update(
-      { views: questionData.views + 1 },
-      { where: { slug } }
-    );
-  }
+
+  await db.Questions.update(
+    { views: questionData.views + 1 },
+    { where: { slug } }
+  );
   const checkSlug = await db.Questions.findOne({
     where: { slug },
     attributes: { exclude: ["userId"] },

@@ -43,6 +43,23 @@ const getUserById = async (req, res, next) => {
   }
 };
 
+const updateUsername = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const { username } = req.body;
+    const user = await userServices.updateUsername(userId, { username });
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: 200, message: "Cập nhật thành công", content: user });
+  } catch (error) {
+    console.log(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 500,
+      message: "Server Error",
+    });
+  }
+};
+
 const updateAvatar = async (req, res, next) => {
   try {
     const userId = req.userId;
@@ -217,6 +234,7 @@ const deleteUser = async (req, res, next) => {
 module.exports = {
   getAllUser,
   getUserById,
+  updateUsername,
   updateAvatar,
   changePassword,
   updateRole,

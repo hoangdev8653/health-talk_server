@@ -15,6 +15,9 @@ router
     userControllers.updateAvatar
   );
 router
+  .route("/updateUsername")
+  .patch(validateToken, userControllers.updateUsername);
+router
   .route("/updatePassword")
   .post(validateToken, userControllers.changePassword);
 router

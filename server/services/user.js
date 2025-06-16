@@ -38,6 +38,26 @@ const getUserById = async (id) => {
   }
 };
 
+const updateUsername = async (userId, { username }) => {
+  try {
+    console.log(userId);
+    console.log(username);
+
+    const user = await db.Users.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new Error("User không tồn tại");
+    }
+    const updateUser = await db.Users.update(
+      { username },
+      { where: { id: userId } }
+    );
+    return updateUser;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const updateAvatar = async (userId, { image }) => {
   try {
     const user = await db.Users.findOne({ where: { id: userId } });
@@ -128,7 +148,6 @@ const login = async ({ email, password }) => {
     const managerServices = require("../services/managerUsers");
     const checkblock = await managerServices.checkIsBlockByUserId(user.id);
     const { accessToken, refreshToken } = generateToken(user.id, user.role);
-    // console.log(refreshToken);
 
     return { user, accessToken, refreshToken, checkblock };
   } catch (error) {
@@ -160,6 +179,7 @@ module.exports = {
   register,
   login,
   changePassword,
+  updateUsername,
   updateAvatar,
   updateRole,
   refreshToken,

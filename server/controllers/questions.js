@@ -60,9 +60,7 @@ const getQuestionBySlug = async (req, res, next) => {
         message: "Slug không được để trống",
       });
     }
-    const userId = req.userId || null;
-    const isUser = !!userId;
-    const question = await questionServices.getQuestionBySlug(slug, isUser);
+    const question = await questionServices.getQuestionBySlug(slug);
     if (!question) {
       return res.status(StatusCodes.NOT_FOUND).json({
         status: 404,

@@ -49,7 +49,15 @@ const getAnswerBySlug = async (slug) => {
 };
 
 const createAnswer = async (userId, { content, questionId }) => {
-  const newAnswer = await db.Answers.create({ userId, content, questionId });
+  const question = await db.Questions.findByPk(questionId);
+  if (!question) {
+    throw new Error("Question not found");
+  }
+  const newAnswer = await db.Answers.create({
+    content,
+    userId,
+    questionId,
+  });
   return newAnswer;
 };
 

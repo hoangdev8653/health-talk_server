@@ -6,7 +6,7 @@ const validateToken = require("../middlewares/auth");
 router.route("/").get(questionController.getAllQuestions);
 router.route("/getById").get(validateToken, questionController.getQuestionById);
 router.route("/getByTag").get(questionController.getQuestionByTag);
-router.route("/:slug").get(validateToken, questionController.getQuestionBySlug);
+router.route("/:slug").get(questionController.getQuestionBySlug);
 router
   .route("/createQuestionTag")
   .post(validateToken, questionController.createQuestionTag);
