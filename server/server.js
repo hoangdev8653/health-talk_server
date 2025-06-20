@@ -7,7 +7,7 @@ const morgan = require("morgan");
 const dbconn = require("./config/dbconnect");
 const routers = require("./routers/index");
 const http = require("http");
-const { connectSocket } = require("./config/connectSocket");
+const connectSocket = require("./config/connectSocket");
 const port = process.env.PORT;
 
 const app = express();
