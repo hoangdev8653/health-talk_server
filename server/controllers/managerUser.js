@@ -74,7 +74,7 @@ const deleteBlockedUser = async (req, res, next) => {
   }
 };
 
-export const managerUserController = {
+module.exports = {
   getAllBlockedUsers,
   checkIsBlockByUserId,
   blockUser,

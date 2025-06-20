@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const validateToken = require("../middlewares/auth");
-const { managerUserController } = require("../controllers/managerUser");
+const managerUserController = require("../controllers/managerUser");
 
 router.route("/").get(managerUserController.getAllBlockedUsers);
 router.route("/check-block").get(managerUserController.checkIsBlockByUserId);
