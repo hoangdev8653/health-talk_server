@@ -39,6 +39,9 @@ app.use((req, res, next) => {
   next(createHttpError(404, "Not Found"));
 });
 
+app.get("/", (req, res) => {
+  res.send("Health-talk API is running");
+});
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.json({
