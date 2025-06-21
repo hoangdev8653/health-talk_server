@@ -1,14 +1,16 @@
-require("dotenv/config");
-const { Sequelize } = require("sequelize"); 
+const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USERNAME,
-  process.env.DB_PASSWORD,
+  process.env.DATABASE_URL ||
+    "postgresql://health_talk_user:YEBXgfR7LZTmzKNp2vWqZTda9dGHn4SH@dpg-d1ao1cuuk2gs738v3gp0-a.singapore-postgres.render.com/health_talk",
   {
-    host: process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT,
+    dialect: "postgres",
     logging: false,
+    dialectOptions: {
+      ssl: process.env.DATABASE_URL
+        ? { require: true, rejectUnauthorized: false }
+        : false,
+    },
     timezone: "+07:00",
   }
 );
@@ -16,9 +18,9 @@ const sequelize = new Sequelize(
 const dbconn = async () => {
   try {
     await sequelize.authenticate();
-    console.log('Kết nối DB thành công ✅.');
+    console.log("✅ Kết nối DB thành công.");
   } catch (error) {
-    console.error('Kết nối DB thất bại:', error);
+    console.error("❌ Kết nối DB thất bại:", error);
   }
 };
 
